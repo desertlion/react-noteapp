@@ -33388,7 +33388,7 @@ var Note = require('./note.js');
 var notes = [
 	{id:1,content:'This is a note\n And it is `awesome`'},
 	{id:2,content:'React is awesome\n Go **use it!!!**'},
-	{id:3,content:'Domain Driven Design\n DDD is the way to go \n > This is a blockquote'}
+	{id:3,content:'Domain Driven Design\n DDD is the way to go \n > This is a blockquote \n \n ``` console.info(\'askldfjalsdfjkaslkdfj\', notes);```'}
 ];
 
 var NotesApp = function(notes){
