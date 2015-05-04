@@ -36,10 +36,12 @@ NotesApp.prototype.deleteNote = function(id){
 	this.notes.splice(index,-1);
 };
 
-NotesApp.prototype.createNote = function(content){
+NotesApp.prototype.createNote = function(content,cb){
 	// get the latest maximum id, and add 1
 	var id = parseInt(this.notes.length)+1;
 	this.notes.push(new Note(id, content));
+    console.info(typeof cb);
+    if(typeof cb !== undefined) cb();
 };
 
 NotesApp.prototype.updateNote = function(id, content){

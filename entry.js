@@ -12,13 +12,15 @@ var marked   = require('marked');
 // load the initial notes
 var Notes = new NotesApp();
 Notes.loadNotes();
+window.Notes = Notes;
 
 var Note   = React.createClass({
 	render: function(){
+        console.info('testing');
 		return (
-			<div className="note">
+            <div className="note">
 				<h3>{this.props.title}</h3>
-            <span dangerouslySetInnerHTML={{ __html:marked(this.props.children.toString())}} />
+                <span dangerouslySetInnerHTML={{ __html:marked(this.props.children.toString())}} />
 			</div>
 		);
 	}
@@ -30,26 +32,46 @@ var NoteTitle = React.createClass({
         );
     }
 });
-var NoteForm = React.createClass({
+var NotesForm = React.createClass({
+    handleSubmit: function(e) {
+        e.preventDefault();
+        var text = React.findDOMNode(this.refs.noteinput).value;
+        if (!text) return;
+        // TODO: send request to the server
+        React.findDOMNode(this.refs.noteinput).value = '';
+        Notes.createNote(text, onChangeCb);
+        return;
+    },
     render: function(){
+        return (
+            <form ref="noteform" onSubmit={this.handleSubmit} className="note-form">
+                <textarea ref="noteinput"></textarea>
+                <input type="submit" value="Add Note" />
+            </form>
+        );
     }
 });
 var NoteList = React.createClass({
 	  render: function(){
 		    var notes     = _.map(Notes.notes, function(note){
-            var title = note.content.substring(0,note.content.indexOf('\n'));
-            title     = title || content;
-            // return <NoteTitle title={title} />
-            return <Note title={title}>{note.content}</Note>
+                var title = note.content.substring(0,note.content.indexOf('\n'));
+                title     = title || note.content;
+                // return <NoteTitle title={title} />
+                return <Note key={note.id} title={title}>{note.content}</Note>
 		    });
 		    return (
-            <div className="note-lists">
-                <h2>Note Taking App</h2>
-                <hr />
-                {notes}
-            </div>
+                <div id="container" className="markdown-body">
+                    <h2>Note Taking App</h2>
+                    <div className="note-lists">
+                        {notes}
+                    </div>
+                    <NotesForm />
+                </div>
 		    );
 	  }
 });
+window.onChangeCb = function(){
+    React.render(<NoteList />, document.body);
+}
 
-React.render(<NoteList />, document.getElementById('container'));
+onChangeCb();
